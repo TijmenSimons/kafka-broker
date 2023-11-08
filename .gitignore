@@ -3,3 +3,5 @@ __pycache__
 build
 *.secret
 *.egg-info
+.pytest_cache
+broker_config.ini
