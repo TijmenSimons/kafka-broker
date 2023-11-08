@@ -1,2 +1,5 @@
 dist/*
-__pycache__/*
+*/__pycache__/*
+build/*
+*.secret
+*.egg-info/*
