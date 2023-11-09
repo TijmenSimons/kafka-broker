@@ -1,6 +1,6 @@
 import asyncio
 
-from src.kafka_broker.classes.event_object import EventObject
+from .event_object import EventObject
 ## from multiprocessing.connection import PipeConnection
 
 

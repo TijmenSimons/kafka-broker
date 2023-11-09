@@ -5,7 +5,6 @@ from pathlib import Path
 current_dir = Path(__file__).parent.resolve()
 
 BASE_CONFIG = str(Path(current_dir, "base_config.ini"))
-print(BASE_CONFIG)
 
 
 def check_config(config: dict) -> dict:
