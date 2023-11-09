@@ -7,5 +7,5 @@ setup(
         "dev": ["pytest>=7.0", "twine>=4.0.2"],
     },
     include_package_data=True,
-    package_data={'kafka_broker': ['*.ini']}
+    package_data={'': ['base_config.ini']}
 )
