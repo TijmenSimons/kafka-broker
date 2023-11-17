@@ -1,25 +1,22 @@
 import logging
 
-from configparser import ConfigParser
 from typing import Any, Callable
 
 from .cache import Cache
 from .classes import ConsumerStorage, EventObject, EventRouter
 from .consumer import init_consumer, initialize
 from .producer import default_callback, produce
-from .config import base_config, check_config
+from .config import get_config
 
 
 class BrokerManager:
     def __init__(self) -> None:
         """Produce to and consume from a kafka message queue."""
         
-        config_parser = ConfigParser()
-        config_parser.read("broker_config.ini")
-        custom_config = dict(config_parser._sections)
+        filename = "broker_config.ini"
 
-        base_config.update(custom_config)
-        self.config = check_config(base_config)
+        self.config = get_config(filename)
+
         self.consumer_storage = ConsumerStorage()
         self.cache = Cache(base_config)
 

@@ -101,5 +101,5 @@ def handle(
 
     obj: EventObject = EventObject.decode(value)
     obj.update_audit_log()
-    
+
     pipe.send({"key": key, "value": obj})

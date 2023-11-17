@@ -1,4 +1,6 @@
 import asyncio
+
+from .event_object import EventObject
 ## from multiprocessing.connection import PipeConnection
 
 
@@ -32,7 +34,13 @@ class ConsumerStorage:
         return True
 
     def set(self, key, value) -> None:
-        self.storage[key] = value
+        if isinstance(value, EventObject):
+            self.storage[key] = value
+        else:
+            try:
+                self.storage[key] = EventObject.decode(value)
+            except Exception as exc:
+                raise Exception("Cannot map value to EventObject.") from exc
 
     def get(self, key, default = None) -> any:
         return self.storage.get(key, default)

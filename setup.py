@@ -6,6 +6,8 @@ setup(
     extras_require={
         "dev": ["pytest>=7.0", "twine>=4.0.2"],
     },
+    include_package_data=True,
+    package_data={'': ['base_config.ini']}
 )
 
 
