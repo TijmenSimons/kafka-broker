@@ -14,7 +14,7 @@ def produce(
     config: dict,
     logger: logging.Logger,
     topic: str,
-    event_object: EventObject | Any,
+    event_object: EventObject,
     callback: Callable = default_callback
 ):
     """Produce an event to the kafka message queue."""

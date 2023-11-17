@@ -7,3 +7,6 @@ setup(
         "dev": ["pytest>=7.0", "twine>=4.0.2"],
     },
 )
+
+
+# python setup.py bdist_wheel sdist

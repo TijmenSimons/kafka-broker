@@ -3,6 +3,7 @@ import logging
 from configparser import ConfigParser
 from typing import Any, Callable
 
+from .cache import Cache
 from .classes import ConsumerStorage, EventObject, EventRouter
 from .consumer import init_consumer, initialize
 from .producer import default_callback, produce
@@ -20,6 +21,7 @@ class BrokerManager:
         base_config.update(custom_config)
         self.config = check_config(base_config)
         self.consumer_storage = ConsumerStorage()
+        self.cache = Cache(base_config)
 
         log_level = self.config["logging"]["log_level"]
         logging.basicConfig(format="%(levelname)s:\t%(message)s", level=int(log_level))
@@ -126,4 +128,5 @@ __all__ = [
     "ConsumerStorage",
     "EventObject",
     "EventRouter",
+    "Cache"
 ]
