@@ -14,7 +14,6 @@ def  produce_cache(
 
     client = Cache(cache_config)
 
-    cached_item = client.cache_item(event_object)
+    cached_item = client.add(event_object)
     if cached_item is None:
         raise Exception("lmao: you thought it worked, SIIIIIIIKE")
-    print(cached_item)

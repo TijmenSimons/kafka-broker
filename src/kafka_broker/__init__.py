@@ -18,7 +18,7 @@ class BrokerManager:
         self.config = get_config(filename)
 
         self.consumer_storage = ConsumerStorage()
-        self.cache = Cache(base_config)
+        self.cache = Cache(self.config)
 
         log_level = self.config["logging"]["log_level"]
         logging.basicConfig(format="%(levelname)s:\t%(message)s", level=int(log_level))
