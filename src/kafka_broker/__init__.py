@@ -1,10 +1,11 @@
 import logging
 
 from typing import Any, Callable
+from confluent_kafka import Consumer
 
 from .cache import Cache
 from .classes import ConsumerStorage, EventObject, EventRouter
-from .consumer import init_consumer, initialize
+from .consumer import init_consumer, initialize, consume
 from .producer import default_callback, produce
 from .config import get_config
 
@@ -15,6 +16,7 @@ class BrokerManager:
         
         filename = "broker_config.ini"
 
+        self.consumer = None
         self.config = get_config(filename)
 
         self.consumer_storage = ConsumerStorage()
@@ -57,6 +59,14 @@ class BrokerManager:
         must return a key and value pair in the form of a tuple.
         """
         produce(self.config, self.logger, topic, event_object, callback)
+
+    def consume(self):
+        if not self.consumer:
+            kafka_config = self.config["kafka.default"]
+            kafka_config.update(self.config["kafka.consumer"])
+            self.consumer = Consumer(kafka_config)
+            self.consumer.subscribe([self.config["general"]["current_location"]])
+        return consume(self.consumer, self.logger)
 
     def init_consumer_app(self, app):
         """Setup the consumer on a FastAPI instance.

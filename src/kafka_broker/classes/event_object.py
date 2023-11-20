@@ -52,7 +52,7 @@ class EventObject:
         }
         
         result = json.dumps(result)
-        return self.correlation_id, result
+        return result
 
     def decode(value):
         data = json.loads(value)

@@ -1,36 +1,55 @@
-import configparser
 from uuid import UUID
+
+from .exceptions.cache import CouldNotEditMemcache, KeyNotFoundException
 from .classes import EventObject
 from pymemcache.client import base
+
 
 class Cache:
     def __init__(self, config) -> None:
         self.client = self.innitialize_connection(config)
+        self.config = config
 
     def innitialize_connection(self, config):
         client = base.Client(
             (
-            config["kafka.cache"]["cache_location"], 
-            config["kafka.cache"]["cache_port"]
+                config["kafka.cache"]["cache_location"],
+                config["kafka.cache"]["cache_port"],
             )
         )
         if client is not None:
             return client
         else:
-            raise Exception("connection could not be innitialized with the cache")
+            raise ConnectionError
 
     def add(self, event_object: EventObject):
-        return self.client.add(str(event_object.correlation_id), event_object.encode()[1])
+        res = self.client.add(
+            str(event_object.correlation_id), event_object.encode()
+        )
+        if res is False:
+            return CouldNotEditMemcache
 
     def get(self, correlation_id: UUID):
-        raw = self.get_raw(correlation_id)
-        return EventObject.decode(raw.decode('utf-8'))
-        
+        byte_string = self.get_raw(correlation_id)
+        return EventObject.decode(byte_string.decode("utf-8"))
+
     def get_raw(self, correlation_id: UUID):
-        return self.client.get(str(correlation_id))
+        byte_string = self.client.get(str(correlation_id))
+        if byte_string is None:
+            return KeyNotFoundException
+        return byte_string
 
     def delete(self, correlation_id: UUID):
-        return self.client.delete(str(correlation_id))
-    
+        res = self.client.delete(str(correlation_id))
+        if res is False:
+            return CouldNotEditMemcache
+        return res
+
     def update(self, event_object: EventObject):
-        return self.client.set(str(event_object.correlation_id), event_object.encode())
+        res = self.client.set(
+            str(event_object.correlation_id), event_object.encode()
+        )
+        if res is False:
+            return CouldNotEditMemcache
+        return res
+        

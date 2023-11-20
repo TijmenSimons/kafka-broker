@@ -24,12 +24,11 @@ def produce(
     producer = Producer(kafka_config)
 
     event_object.add_audit_log(config["general"]["current_location"])
-    event_key, event_value = event_object.encode()
 
     producer.produce(
         topic,
-        key=event_key,
-        value=event_value,
+        key=str(event_object.correlation_id),
+        value=event_object.encode(),
         callback=callback,
     )
 
