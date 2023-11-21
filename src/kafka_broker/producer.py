@@ -1,6 +1,7 @@
 import logging
 from typing import Callable
 from confluent_kafka import Producer
+from .exceptions.cache import KeyNotFoundException
 
 from .classes import EventObject
 from .cache import Cache
@@ -33,16 +34,16 @@ def produce(
         value=event_json,
         callback=callback,
     )
-
-    if cache.get(event_object.correlation_id):
+    
+    try:
         cache.update(event_object)
-    else:
+    except KeyNotFoundException:
         cache.add(event_object)
 
     logger.info(
         "Produced - topic {topic}: key = {key} value = {value}".format(
             topic=topic,
-            key=f"{event_object.correlation_id[:16]}...",
+            key=f"{str(event_object.correlation_id)[:16]}...",
             value=f"{event_json[:100]}...",
         )
     )

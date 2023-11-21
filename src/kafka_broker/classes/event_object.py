@@ -42,7 +42,7 @@ class EventObject:
 
         if not status:
             status = "pending"
-        self.status = data
+        self.status = status
 
         if not audit_log:
             audit_log = []
