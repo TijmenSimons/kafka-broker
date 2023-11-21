@@ -34,6 +34,9 @@ def produce(
         value=event_json,
         callback=callback,
     )
+
+    producer.poll(100)
+    producer.flush()
     
     try:
         cache.update(event_object)
@@ -47,6 +50,3 @@ def produce(
             value=f"{event_json[:100]}...",
         )
     )
-
-    producer.poll(100)
-    producer.flush()

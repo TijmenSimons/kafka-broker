@@ -51,6 +51,7 @@ class EventObject:
     def encode(self):
         result = {
             "correlation_id": str(self.correlation_id),
+            "status": self.status,
             "event": self.event,
             "data": self.data,
             "audit_log": self.audit_log,
@@ -65,6 +66,7 @@ class EventObject:
         self = EventObject()
 
         self.correlation_id = data.get("correlation_id")
+        self.status = data.get("status")
         self.event = data.get("event")
         self.data = data.get("data")
         self.audit_log = data.get("audit_log")
