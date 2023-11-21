@@ -13,8 +13,8 @@ class Cache:
     def innitialize_connection(self, config):
         client = base.Client(
             (
-                config["kafka.cache"]["cache_location"],
-                config["kafka.cache"]["cache_port"],
+                config["memcached"]["cache_location"],
+                config["memcached"]["cache_port"],
             )
         )
         if client is not None:
@@ -27,7 +27,7 @@ class Cache:
             str(event_object.correlation_id), event_object.encode()
         )
         if res is False:
-            return CouldNotEditMemcache
+            raise CouldNotEditMemcache
 
     def get(self, correlation_id: UUID):
         byte_string = self.get_raw(correlation_id)
@@ -36,13 +36,13 @@ class Cache:
     def get_raw(self, correlation_id: UUID):
         byte_string = self.client.get(str(correlation_id))
         if byte_string is None:
-            return KeyNotFoundException
+            raise KeyNotFoundException
         return byte_string
 
     def delete(self, correlation_id: UUID):
         res = self.client.delete(str(correlation_id))
         if res is False:
-            return CouldNotEditMemcache
+            raise CouldNotEditMemcache
         return res
 
     def update(self, event_object: EventObject):
@@ -50,6 +50,6 @@ class Cache:
             str(event_object.correlation_id), event_object.encode()
         )
         if res is False:
-            return CouldNotEditMemcache
+            raise CouldNotEditMemcache
         return res
         
