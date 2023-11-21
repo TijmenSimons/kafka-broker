@@ -8,8 +8,8 @@ class EventObject:
         self,
         correlation_id: int = None,
         event: str = None,
-        status: str = None,
         data: dict[any] = None,
+        status: str = None,
         audit_log: list[dict[str, int, int]] = None,
     ) -> None:
         """Initialize the EventObject:
