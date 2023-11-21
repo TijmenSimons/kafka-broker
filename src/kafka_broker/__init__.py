@@ -11,6 +11,9 @@ from .config import get_config
 
 
 class BrokerManager:
+    consumer_storage: ConsumerStorage
+    cache: Cache
+
     def __init__(self) -> None:
         """Produce to and consume from a kafka message queue."""
         
@@ -19,13 +22,13 @@ class BrokerManager:
         self.consumer = None
         self.config = get_config(filename)
 
-        self.consumer_storage = ConsumerStorage()
-        self.cache = Cache(self.config)
-
         log_level = self.config["logging"]["log_level"]
         logging.basicConfig(format="%(levelname)s:\t%(message)s", level=int(log_level))
 
         self.logger = logging.getLogger("kafka_broker_logger")
+
+        self.consumer_storage = ConsumerStorage()
+        self.cache = Cache(self.config, self.logger)
 
     def produce(
         self,
@@ -58,7 +61,7 @@ class BrokerManager:
         encode it. If provided in the config, the custom encode function
         must return a key and value pair in the form of a tuple.
         """
-        produce(self.config, self.logger, topic, event_object, callback)
+        produce(self.config, self.cache, self.logger, topic, event_object, callback)
 
     def consume(self):
         if not self.consumer:

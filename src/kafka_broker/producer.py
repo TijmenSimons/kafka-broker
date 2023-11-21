@@ -1,8 +1,9 @@
 import logging
-from typing import Any, Callable
+from typing import Callable
 from confluent_kafka import Producer
 
 from .classes import EventObject
+from .cache import Cache
 
 
 def default_callback(err, msg):
@@ -12,24 +13,38 @@ def default_callback(err, msg):
 
 def produce(
     config: dict,
+    cache: Cache,
     logger: logging.Logger,
     topic: str,
     event_object: EventObject,
-    callback: Callable = default_callback
+    callback: Callable = default_callback,
 ):
     """Produce an event to the kafka message queue."""
     kafka_config = config["kafka.default"]
     kafka_config.update(config["kafka.producer"])
 
     producer = Producer(kafka_config)
-
     event_object.add_audit_log(config["general"]["current_location"])
+    event_json = event_object.encode()
 
     producer.produce(
         topic,
         key=str(event_object.correlation_id),
-        value=event_object.encode(),
+        value=event_json,
         callback=callback,
+    )
+
+    if cache.get(event_object.correlation_id):
+        cache.update(event_object)
+    else:
+        cache.add(event_object)
+
+    logger.info(
+        "Produced - topic {topic}: key = {key} value = {value}".format(
+            topic=topic,
+            key=f"{event_object.correlation_id[:16]}...",
+            value=f"{event_json[:100]}...",
+        )
     )
 
     producer.poll(100)

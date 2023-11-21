@@ -8,6 +8,7 @@ class EventObject:
         self,
         correlation_id: int = None,
         event: str = None,
+        status: str = None,
         data: dict[any] = None,
         audit_log: list[dict[str, int, int]] = None,
     ) -> None:
@@ -38,6 +39,10 @@ class EventObject:
         if not data:
             data = {}
         self.data = data
+
+        if not status:
+            status = "pending"
+        self.status = data
 
         if not audit_log:
             audit_log = []
