@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - TijmenSimons-patch-1
       
 jobs:
   deploy:
