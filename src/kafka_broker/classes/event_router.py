@@ -36,6 +36,6 @@ class EventRouter:
                 if isinstance(func, EventRouter):
                     return func.execute_event(event_object, events[1:])
                 
-                return func(event_object)
+                return func(event_object=event_object)
         else:
             logging.warning(f"Event '{event_object.event}' not found in '{self.name}'")

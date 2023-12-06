@@ -12,3 +12,4 @@ setup(
 
 
 # python setup.py bdist_wheel sdist
+# python -m twine upload dist/*
