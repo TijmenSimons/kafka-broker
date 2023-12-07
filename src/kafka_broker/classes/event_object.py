@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+import datetime
 import uuid
 
 
@@ -50,14 +50,22 @@ class EventObject:
 
     def encode(self):
         result = {
-            "correlation_id": str(self.correlation_id),
+            "correlation_id": self.correlation_id,
             "status": self.status,
             "event": self.event,
             "data": self.data,
             "audit_log": self.audit_log,
         }
+
+        def default(o):
+            if isinstance(o, (datetime.date, datetime.datetime)):
+                return o.isoformat()
+            
+            if isinstance(o, uuid.UUID):
+                return str(o)
+
         
-        result = json.dumps(result)
+        result = json.dumps(result, default=default)
         return result
 
     def decode(value):
@@ -79,11 +87,11 @@ class EventObject:
                 "data": self.data.copy(),
                 "event": self.event,
                 "location": location,
-                "time_sent": int(datetime.now().timestamp()),
+                "time_sent": int(datetime.datetime.now().timestamp()),
                 "time_received": None,
             }
         )
 
     def update_audit_log(self):
         cur_location = self.audit_log[-1]
-        cur_location["time_received"] = int(datetime.now().timestamp())
+        cur_location["time_received"] = int(datetime.datetime.now().timestamp())
