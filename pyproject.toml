@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kafka-broker"
-version = "0.2.20"
+version = "0.2.21"
 authors = [
   { name="Tijmen Simons", email="tijmen.simons@student.hu.nl" },
   { name="Ivar Stek", email="ivar.stek@student.hu.nl" },
@@ -14,7 +14,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
   "confluent_kafka>=2.3.0",
-  "pymemcache>=4.0.0"
+  "pymemcache>=4.0.0",
+  "pydantic>=2.5.3"
 ] 
 classifiers = [
     "Programming Language :: Python :: 3",

@@ -1,6 +1,7 @@
 import json
 import datetime
 import uuid
+from pydantic import BaseModel
 
 
 class EventObject:
@@ -63,6 +64,9 @@ class EventObject:
             
             if isinstance(o, uuid.UUID):
                 return str(o)
+            
+            if isinstance(o, BaseModel):
+                return o.model_dump()
 
         
         result = json.dumps(result, default=default)
