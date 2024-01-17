@@ -3,7 +3,7 @@ from uuid import UUID
 
 from .exceptions.cache import CouldNotEditMemcache, KeyNotFoundException
 from .classes import EventObject
-from pymemcache.client import base
+from pymemcache.client.base import Client
 
 
 class Cache:
@@ -13,7 +13,7 @@ class Cache:
         self.logger = logger
 
     def innitialize_connection(self, config):
-        client = base.Client(
+        client = Client(
             (
                 config["memcached"]["cache_location"],
                 config["memcached"]["cache_port"],
@@ -30,7 +30,7 @@ class Cache:
         )
         if res is False:
             raise CouldNotEditMemcache
-        self.logger.debug(f"Added {str(event_object.correlation_id)} to cache.")
+        self.logger.info(f"Added {str(event_object.correlation_id)} to cache.")
 
     def get(self, correlation_id: UUID):
         byte_string = self.get_raw(correlation_id)
@@ -46,7 +46,7 @@ class Cache:
         res = self.client.delete(str(correlation_id))
         if res is False:
             raise CouldNotEditMemcache
-        self.logger.debug(f"Deleted {str(correlation_id)} to cache.")
+        self.logger.info(f"Deleted {str(correlation_id)} to cache.")
         return res
 
     def update(self, event_object: EventObject):
@@ -55,5 +55,5 @@ class Cache:
         )
         if res is False:
             raise CouldNotEditMemcache
-        self.logger.debug(f"Updated {str(event_object.correlation_id)} in cache.")
+        self.logger.info(f"Updated {str(event_object.correlation_id)} in cache.")
         return res
