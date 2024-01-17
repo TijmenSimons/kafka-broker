@@ -110,7 +110,7 @@ def handle(logger: logging.Logger, msg):
 
     logger.info(
         "Consumed - topic {topic}: key = {key} value = {value}".format(
-            topic=topic, key=f"{key[:16]}...", value=f"{value[:100]}..."
+            topic=topic, key=key, value=f"{value[:200]}..."
         )
     )
 
